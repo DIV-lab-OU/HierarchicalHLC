@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Complete</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Thank you for participating!</h1>
+        <p>Your responses have been recorded.</p>
+        <button onclick="downloadResults()">Download Results</button>
+    </div>
+
+    <script>
+        function downloadResults() {
+            let participantData = JSON.parse(localStorage.getItem("participantData"));
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Task,Duration (seconds)\n";
+
+            participantData.taskTimes.forEach(task => {
+                csvContent += `${task.task},${task.duration}\n`;
+            });
+
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `${participantData.name}_results.csv`);
+            document.body.appendChild(link);
+            link.click();
+        }
+    </script>
+</body>
+</html>

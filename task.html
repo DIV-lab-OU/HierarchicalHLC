@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - Paper Study</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Task 1</h1>
+        <p>Analyze the following data visualization and answer the question.</p>
+        <img src="chart1.png" alt="Visualization 1">
+        <button id="nextTask">Next Task</button>
+    </div>
+
+    <script>
+        let taskIndex = 0;
+        let startTime = Date.now();
+        let participantData = JSON.parse(localStorage.getItem("participantData"));
+
+        document.getElementById("nextTask").addEventListener("click", function() {
+            let endTime = Date.now();
+            participantData.taskTimes.push({
+                task: `Task-${taskIndex + 1}`,
+                duration: (endTime - startTime) / 1000 // Convert to seconds
+            });
+
+            localStorage.setItem("participantData", JSON.stringify(participantData));
+
+            taskIndex++;
+            if (taskIndex < 3) {
+                document.querySelector("h1").innerText = `Task ${taskIndex + 1}`;
+                document.querySelector("img").src = `chart${taskIndex + 1}.png`;
+                startTime = Date.now();
+            } else {
+                window.location.href = "complete.html";
+            }
+        });
+    </script>
+</body>
+</html>
