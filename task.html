@@ -3,38 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tasks - Paper Study</title>
+    <title>Task - Paper Study</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Task 1</h1>
+        <h1 class="hlc-highlight">Task 1</h1>
         <p>Analyze the following data visualization and answer the question.</p>
-        <img src="chart1.png" alt="Visualization 1">
+        <img id="taskImage" src="chart1.png" alt="Visualization">
+        <p id="taskQuestion">What insights can you derive from this visualization?</p>
+        <textarea id="responseBox" placeholder="Type your response here..." rows="6"></textarea>
         <button id="nextTask">Next Task</button>
     </div>
 
     <script>
+        const tasks = [
+            { image: 'chart1.png', question: 'What insights can you derive from this visualization?' },
+            { image: 'chart2.png', question: 'How does this visualization help you interpret the data differently?' },
+            { image: 'chart3.png', question: 'Identify the main trends highlighted by this visualization.' }
+        ];
+
         let taskIndex = 0;
         let startTime = Date.now();
-        let participantData = JSON.parse(localStorage.getItem("participantData"));
+        let participantData = JSON.parse(localStorage.getItem("participantData")) || { taskTimes: [], responses: [] };
 
-        document.getElementById("nextTask").addEventListener("click", function() {
+        document.getElementById('nextTask').addEventListener('click', () => {
+            let response = document.getElementById('responseBox').value;
             let endTime = Date.now();
+
             participantData.taskTimes.push({
                 task: `Task-${taskIndex + 1}`,
-                duration: (endTime - startTime) / 1000 // Convert to seconds
+                duration: (endTime - startTime) / 1000,
+                response: response
             });
 
             localStorage.setItem("participantData", JSON.stringify(participantData));
 
             taskIndex++;
-            if (taskIndex < 3) {
+            if (taskIndex < tasks.length) {
+                document.getElementById('taskImage').src = tasks[taskIndex].image;
+                document.getElementById('taskQuestion').innerText = tasks[taskIndex].question;
                 document.querySelector("h1").innerText = `Task ${taskIndex + 1}`;
-                document.querySelector("img").src = `chart${taskIndex + 1}.png`;
+                document.getElementById('responseBox').value = '';
                 startTime = Date.now();
             } else {
-                window.location.href = "complete.html";
+                location.href = 'complete.html';
             }
         });
     </script>
